@@ -8,7 +8,7 @@ No indirect calls, no unneeded objects, compile time code generation.
   auto cumulated_product = mon(v.begin(), v.end())
                     .map([](int i) { return i + 1; }) // lazy evaluation
                     .scan_left([](double a, int b) { return a * b; }, 1.0); // sort of cumsum function as in scala
-  //std::vector<int>{1, 2, 6, 24, 120, 720};
+  // result is std::vector<int>{1, 2, 6, 24, 120, 720};
 
   auto result = glues::mon(v.begin(), v.end())
                     .map([](int i){return i * i;}) // lazy
@@ -17,12 +17,14 @@ No indirect calls, no unneeded objects, compile time code generation.
                                    int a) { return s + std::to_string(a); },
                                 std::string("foo")); // 
   // result is foo149
+
     std::vector<double> numbers{10, -1, 1000, 100};
       auto logarithms = glues::mon(numbers.begin(), numbers.end()).flat_map([](double i) {
           return i > 0 ?
-              glues::some(log10(i)) : glues::none<double>();
-      }).run<std::deque<double>>();
-      auto expected = std::deque<double> {1.0, 3.0, 2.0};
+              glues::some(log10(i)) : glues::none<double>(); // any iterable can be used here as return type
+      }).run<std::deque<double>>(); // trigger execution and create a deque<double> for result
+  // result is  std::deque<double> {1.0, 3.0, 2.0};
+
   // see unit tests for more examples
 ```
 ## Requirements:
