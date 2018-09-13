@@ -12,23 +12,21 @@ template <typename T>
 using Vector =
     boost::container::small_vector<T, 1, boost::container::new_allocator<T>>;
 
-template<typename T>
-auto some(const T & t) ->Vector<T> {
-	return Vector<T>{t};
+template <typename T> auto some(const T &t) -> Vector<T> {
+  return Vector<T>{t};
 }
 
-template<typename T>
-auto none() ->Vector<T> {
-	return Vector<T>{};
-}
+template <typename T> auto none() -> Vector<T> { return Vector<T>{}; }
 
 template <typename T, typename Op> struct MonadicGlueMap;
 template <typename, typename> struct MonadicGlueFilter;
 template <typename, typename> struct MonadicGlueFlatMap;
+
 template <typename K> struct Data {
   K begin;
   K end;
 };
+
 template <typename ThisGlue, typename T> struct MonadicTrait : public ThisGlue {
   Data<T> data;
   using This = MonadicTrait<ThisGlue, T>;
@@ -147,7 +145,9 @@ template <typename PrevGlue, typename Op> struct MonadicGlueMap {
   typedef ReturnType<Op, this_input_type> output_type;
   PrevGlue prev;
   Op op;
+
   MonadicGlueMap(Op op, PrevGlue prev) : op(op), prev(prev) {}
+
   Vector<output_type> execute_monadic(input_type k) {
     Vector<output_type> out;
     for (auto a : prev.execute_monadic(k)) {
@@ -164,7 +164,9 @@ template <typename PrevGlue, typename Op> struct MonadicGlueFilter {
   typedef this_input_type output_type;
   PrevGlue prev;
   Op op;
+
   MonadicGlueFilter(Op op, PrevGlue prev) : op(op), prev(prev) {}
+
   Vector<output_type> execute_monadic(input_type k) {
     Vector<output_type> out;
     for (auto a : prev.execute_monadic(k)) {
@@ -183,6 +185,7 @@ template <typename PrevGlue, typename Op> struct MonadicGlueFlatMap {
       typename container_val<ReturnType<Op, this_input_type>>::type output_type;
   PrevGlue prev;
   Op op;
+
   MonadicGlueFlatMap(Op op, PrevGlue prev) : op(op), prev(prev) {}
   Vector<output_type> execute_monadic(input_type k) {
     Vector<output_type> out;
@@ -194,6 +197,7 @@ template <typename PrevGlue, typename Op> struct MonadicGlueFlatMap {
     return out;
   }
 };
+
 }
 
 #endif /* INCLUDE_GLUES_GLUE_H_ */
