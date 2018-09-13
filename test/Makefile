@@ -7,11 +7,11 @@ all: test
 
 
 %.o: %.cxx $(shell find ../include -type f)
-	g++ -std=c++14 -c $< -o $@ -I../include
+	g++ -std=c++11 -c $< -o $@ -I../include
 
 
 test: test_basic.o
-	g++ -std=c++14 $^ -o $@ -lgtest -lpthread
+	g++ -std=c++11 $^ -o $@ -lgtest -lpthread
 
 
 clean: 
